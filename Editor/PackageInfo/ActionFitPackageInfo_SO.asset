@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b5ab7e2b67b436db878fd7b023d8616, type: 3}
+  m_Name: ActionFitPackageInfo_SO
+  m_EditorClassIdentifier: 
+  _packageId: com.actionfit.githubauth
+  _displayName: GitHub Auth
+  _repoName: GitHub_Auth
+  _owner: "\uC1A1\uC81C\uC6B0"
+  _status: verified
+  _description: Shared GitHub authentication diagnostics and guidance for ActionFit
+    Unity editor automation packages.
+  _releaseNote: "- `com.actionfit.githubauth` \uCD08\uAE30 \uBC30\uD3EC \uD6C4\uBCF4\uB97C
+    `1.0.1`\uB85C \uAC31\uC2E0\uD588\uC2B5\uB2C8\uB2E4.\n\n- PackageInfo \uB9B4\uB9AC\uC988
+    \uB178\uD2B8\uB97C \uD604\uC7AC `1.0.1` \uBC30\uD3EC \uD6C4\uBCF4 \uAE30\uC900\uC73C\uB85C
+    \uC815\uB9AC\uD588\uC2B5\uB2C8\uB2E4.\n\n- \uD328\uD0A4\uC9C0 \uBC84\uC804\uC744
+    `1.0.1`\uB85C \uC62C\uB838\uC2B5\uB2C8\uB2E4."
+  _dependenciesOverride: 

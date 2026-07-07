@@ -1,0 +1,70 @@
+# AI Guide - GitHub Auth
+
+This file is shipped inside the UPM package so an AI assistant in a consuming Unity project can understand the package without access to the source project's `Docs/AI` folder.
+
+## Package Identity
+
+- Package ID: `com.actionfit.githubauth`
+- Display name: GitHub Auth
+- Repository: `https://github.com/ActionFit-Editor/GitHub_Auth.git`
+- Current package version at generation time: `1.0.1`
+- Unity version: `6000.2`
+
+## Purpose
+
+GitHub Auth owns shared GitHub authentication diagnostics and guidance for ActionFit Unity editor automation packages. Use it when an editor tool must verify local GitHub access before running `git push`, tag push, private repository reads, or package publish operations.
+
+This package does not store GitHub tokens. It checks and explains the local environment: Git remotes, GitHub CLI auth, credential helpers, SSH key access, `git ls-remote`, and `git push --dry-run`.
+
+## Project Router Registration
+
+This package should be listed in `Packages/com.actionfit.custompackagemanager/PACKAGE_AI_GUIDE_ROUTER.md`.
+
+Requested router entry:
+
+- `Packages/com.actionfit.githubauth/AI_GUIDE.md` - GitHub Auth provides shared GitHub credential diagnostics and user guidance for ActionFit Unity editor automation packages. Read when changing local GitHub authentication checks, push preflight behavior, token/credential guidance, or packages that depend on GitHub push/publish access.
+
+## Required Reading For AI
+
+- Read this `AI_GUIDE.md` before changing, diagnosing, or explaining this package.
+- Read `README.md` for user-facing setup, command sequences, and troubleshooting text.
+- Read `package.json` for package ID, version, Unity version, and dependencies.
+- Read `Editor/PackageInfo/ActionFitPackageInfo_SO.asset` for catalog metadata, repository name, description, and release note.
+
+## Editing Rules
+
+- Keep reusable GitHub credential diagnostics in this package instead of duplicating command sequences across other packages.
+- Do not add token persistence without an explicit security review and user approval. Prefer `gh auth`, OS credential helpers, or SSH keys.
+- Do not log raw tokens, credential helper output that may contain secrets, or complete environment dumps.
+- Keep user-facing failure guidance actionable and short enough to fit a Unity dialog.
+- When dependent packages such as Build Automation need local GitHub access, call `GitHubAuthPreflight` and reference this README instead of embedding a second full guide.
+- When behavior changes, update this `AI_GUIDE.md`, `README.md`, and PackageInfo release notes before publishing.
+
+## Behavior Notes
+
+- Menu: `Tools/ActionFit/GitHub Auth/Check Project GitHub Access`.
+- Main API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.CheckProjectGitHubPushAccess(string projectRoot)`.
+- Reusable guard API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.EnsureProjectGitHubPushAccess(string projectRoot, string contextName)` returns `true` when local GitHub read/push checks pass. On failure it shows the shared GitHub authentication dialog and returns `false`.
+- Dialog API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.ShowRequiredDialog(GitHubAuthCheckResult result, string contextName)`.
+- The push preflight uses `GIT_TERMINAL_PROMPT=0` so Unity does not hang waiting for terminal credential prompts.
+- The standard check sequence is:
+  1. `git remote get-url origin`
+  2. reject non-GitHub origins for GitHub-specific automation
+  3. `git ls-remote origin HEAD`
+  4. `git push --dry-run`
+- If HTTPS auth fails with `could not read Username`, guide the user to run `gh auth login --hostname github.com --git-protocol https --scopes repo,workflow`, then `gh auth setup-git --hostname github.com`, then retry `GIT_TERMINAL_PROMPT=0 git push --dry-run`.
+- If SSH auth fails with `Permission denied (publickey)`, guide the user to verify `ssh -T git@github.com` and register a public key with GitHub.
+- Build Automation depends on this package and uses it before BuildCommit creates the request commit/tag.
+
+## Release Note Rules
+
+- `ActionFitPackageInfo_SO.ReleaseNote` must contain only the single version being prepared.
+- Do not copy older changelog entries into the newest release note.
+- Version history and update-range summaries are composed by Custom Package Manager from separate catalog version rows.
+
+## Publish Notes
+
+- Publishing is manual through Custom Package Manager.
+- Do not manually add `com.actionfit.githubauth` catalog rows before the package is actually published.
+- The `GitHub_Auth` GitHub repository must exist before first publish.
+- Before reusing a version, check the remote Git tags. Published tags are immutable.
