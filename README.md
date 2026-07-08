@@ -8,8 +8,10 @@ ActionFit Unity editor automation packages에서 공통으로 사용하는 GitHu
 
 - `GitHubAuthPreflight.CheckProjectGitHubPushAccess(projectRoot)`: 프로젝트 루트에서 `origin` remote, GitHub read access, current branch push dry-run을 확인합니다.
 - `GitHubAuthPreflight.EnsureProjectGitHubPushAccess(projectRoot, contextName)`: 인증 확인에 성공하면 `true`를 반환하고, 실패하면 GitHub 인증 안내 팝업을 띄운 뒤 `false`를 반환합니다.
-- `GitHubAuthPreflight.ShowRequiredDialog(result, contextName)`: 인증 실패 시 Unity 팝업으로 README/AI 문의 안내와 기본 명령 시퀀스를 보여줍니다.
+- `GitHubAuthPreflight.ShowRequiredDialog(result, contextName)`: 인증 실패 시 Unity 팝업으로 README/AI 문의 안내, 기본 명령 시퀀스, `연결 시도` 버튼을 보여줍니다.
+- `GitHubAuthPreflight.OpenProjectGitHubSetupTerminal(projectRoot)`: macOS Terminal을 열고 현재 프로젝트 루트에서 GitHub 연결 확인/설정 스크립트를 실행합니다. Terminal 자동 실행에 실패하면 스크립트를 클립보드에 복사합니다.
 - `Tools > ActionFit > GitHub Auth > Check Project GitHub Access`: 현재 Unity 프로젝트의 GitHub 연결을 수동으로 점검합니다.
+- `Tools > ActionFit > GitHub Auth > Open Setup Terminal`: 현재 Unity 프로젝트 루트에서 GitHub 연결 시도 Terminal을 바로 엽니다.
 
 ## 로컬 GitHub 연결 확인
 
@@ -33,6 +35,19 @@ GIT_TERMINAL_PROMPT=0 git ls-remote origin HEAD
 GIT_TERMINAL_PROMPT=0 git push --dry-run
 ```
 
+## Unity Tool에서 연결 시도
+
+`Check Project GitHub Access`에서 연결 실패 팝업이 뜨면 `연결 시도` 버튼을 누를 수 있습니다. 이 버튼은 macOS Terminal을 열고 현재 프로젝트 루트에서 아래 작업을 순서대로 실행합니다.
+
+- `origin` remote 확인
+- HTTPS remote일 때 `gh auth status`, 필요 시 `gh auth login --hostname github.com --git-protocol https --scopes repo,workflow`
+- `gh auth setup-git --hostname github.com`
+- SSH remote일 때 `ssh -T git@github.com`
+- `GIT_TERMINAL_PROMPT=0 git ls-remote origin HEAD`
+- `GIT_TERMINAL_PROMPT=0 git push --dry-run`
+
+이 기능은 GitHub token을 Unity 프로젝트나 EditorPrefs에 저장하지 않습니다. 실제 인증은 GitHub CLI, macOS keychain, Git credential helper, SSH key 같은 로컬 계정 설정에 위임합니다.
+
 ## 오류별 안내
 
 - `fatal: could not read Username for 'https://github.com': Device not configured`
@@ -52,4 +67,4 @@ GIT_TERMINAL_PROMPT=0 git push --dry-run
 
 `com.actionfit.buildautomation`은 `Commit, Tag & Push` 실행 전에 이 패키지의 preflight를 호출합니다. 인증이 실패하면 커밋과 태그를 만들기 전에 중단하고, Unity 팝업에 GitHub 인증 필요 문구와 README/AI 문의 안내를 표시합니다.
 
-팝업이 표시되면 이 README의 로컬 GitHub 연결 확인 절차를 따르거나, AI에게 "BuildCommit GitHub 인증 가이드 알려줘"라고 문의하면 됩니다.
+팝업이 표시되면 `연결 시도` 버튼을 누르거나, 이 README의 로컬 GitHub 연결 확인 절차를 따르거나, AI에게 "BuildCommit GitHub 인증 가이드 알려줘"라고 문의하면 됩니다.

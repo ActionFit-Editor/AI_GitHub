@@ -7,7 +7,7 @@ This file is shipped inside the UPM package so an AI assistant in a consuming Un
 - Package ID: `com.actionfit.githubauth`
 - Display name: GitHub Auth
 - Repository: `https://github.com/ActionFit-Editor/GitHub_Auth.git`
-- Current package version at generation time: `1.0.1`
+- Current package version at generation time: `1.0.2`
 - Unity version: `6000.2`
 
 ## Purpose
@@ -37,15 +37,17 @@ Requested router entry:
 - Do not add token persistence without an explicit security review and user approval. Prefer `gh auth`, OS credential helpers, or SSH keys.
 - Do not log raw tokens, credential helper output that may contain secrets, or complete environment dumps.
 - Keep user-facing failure guidance actionable and short enough to fit a Unity dialog.
+- The setup-terminal helper may run `gh auth`/SSH checks in the user's Terminal, but must not persist GitHub tokens in Unity assets, EditorPrefs, package files, or logs.
 - When dependent packages such as Build Automation need local GitHub access, call `GitHubAuthPreflight` and reference this README instead of embedding a second full guide.
 - When behavior changes, update this `AI_GUIDE.md`, `README.md`, and PackageInfo release notes before publishing.
 
 ## Behavior Notes
 
-- Menu: `Tools/ActionFit/GitHub Auth/Check Project GitHub Access`.
+- Menus: `Tools/ActionFit/GitHub Auth/Check Project GitHub Access` and `Tools/ActionFit/GitHub Auth/Open Setup Terminal`.
 - Main API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.CheckProjectGitHubPushAccess(string projectRoot)`.
 - Reusable guard API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.EnsureProjectGitHubPushAccess(string projectRoot, string contextName)` returns `true` when local GitHub read/push checks pass. On failure it shows the shared GitHub authentication dialog and returns `false`.
-- Dialog API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.ShowRequiredDialog(GitHubAuthCheckResult result, string contextName)`.
+- Dialog API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.ShowRequiredDialog(GitHubAuthCheckResult result, string contextName)` and the overload with `projectRoot`. The failure dialog includes a `연결 시도` button that opens the setup terminal.
+- Setup Terminal API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.OpenProjectGitHubSetupTerminal(string projectRoot)` writes a temporary macOS `.command` script and opens it in Terminal. Non-macOS or launch failures copy the script to the clipboard instead.
 - The push preflight uses `GIT_TERMINAL_PROMPT=0` so Unity does not hang waiting for terminal credential prompts.
 - The standard check sequence is:
   1. `git remote get-url origin`

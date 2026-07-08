@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ namespace ActionFit.GitHubAuth.Editor
         [MenuItem("Tools/ActionFit/GitHub Auth/Check Project GitHub Access")]
         public static void CheckProjectGitHubAccess()
         {
-            string projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+            string projectRoot = GitHubAuthPreflight.GetCurrentUnityProjectRoot();
             GitHubAuthCheckResult result = GitHubAuthPreflight.CheckProjectGitHubPushAccess(projectRoot);
             if (result.Success)
             {
@@ -22,7 +21,15 @@ namespace ActionFit.GitHubAuth.Editor
                 return;
             }
 
-            GitHubAuthPreflight.ShowRequiredDialog(result, "GitHub 연결 확인");
+            GitHubAuthPreflight.ShowRequiredDialog(result, "GitHub 연결 확인", projectRoot);
+        }
+
+        [MenuItem("Tools/ActionFit/GitHub Auth/Open Setup Terminal")]
+        public static void OpenSetupTerminal()
+        {
+            string projectRoot = GitHubAuthPreflight.GetCurrentUnityProjectRoot();
+            if (!GitHubAuthPreflight.OpenProjectGitHubSetupTerminal(projectRoot, out string error))
+                Debug.LogWarning($"[GitHubAuthMenu] Failed to open setup terminal: {error}");
         }
     }
 }
