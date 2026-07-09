@@ -7,7 +7,7 @@ namespace ActionFit.GitHubAuth.Editor
 {
     public static class GitHubAuthMenu
     {
-        [MenuItem("Tools/ActionFit/GitHub Auth/Check Project GitHub Access")]
+        [MenuItem("Tools/Package/GitHub Auth/Check Project GitHub Access", false, 20)]
         public static void CheckProjectGitHubAccess()
         {
             string projectRoot = GitHubAuthPreflight.GetCurrentUnityProjectRoot();
@@ -24,7 +24,7 @@ namespace ActionFit.GitHubAuth.Editor
             GitHubAuthPreflight.ShowRequiredDialog(result, "GitHub 연결 확인", projectRoot);
         }
 
-        [MenuItem("Tools/ActionFit/GitHub Auth/Open Setup Terminal")]
+        [MenuItem("Tools/Package/GitHub Auth/Open Setup Terminal", false, 21)]
         public static void OpenSetupTerminal()
         {
             string projectRoot = GitHubAuthPreflight.GetCurrentUnityProjectRoot();

@@ -20,15 +20,8 @@ MonoBehaviour:
   _status: verified
   _description: Shared GitHub authentication diagnostics and guidance for ActionFit
     Unity editor automation packages.
-  _releaseNote: "- GitHub \uC778\uC99D \uC2E4\uD328 \uD31D\uC5C5\uC5D0 `\uC5F0\uACB0
-    \uC2DC\uB3C4` \uBC84\uD2BC\uC744 \uCD94\uAC00\uD574 macOS Terminal\uC5D0\uC11C
-    \uD604\uC7AC \uD504\uB85C\uC81D\uD2B8 \uB8E8\uD2B8 \uAE30\uC900 \uC778\uC99D
-    \uC2A4\uD06C\uB9BD\uD2B8\uB97C \uC2E4\uD589\uD560 \uC218 \uC788\uAC8C \uD588\uC2B5\uB2C8\uB2E4.\n-
-    `Tools > ActionFit > GitHub Auth > Open Setup Terminal` \uBA54\uB274\uB97C \uCD94\uAC00\uD588\uC2B5\uB2C8\uB2E4.\n-
-    Terminal \uC790\uB3D9 \uC2E4\uD589\uC5D0 \uC2E4\uD328\uD558\uAC70\uB098 macOS\uAC00
-    \uC544\uB2CC \uD658\uACBD\uC5D0\uC11C\uB294 \uC2E4\uD589 \uC2A4\uD06C\uB9BD\uD2B8\uB97C
-    \uD074\uB9BD\uBCF4\uB4DC\uC5D0 \uBCF5\uC0AC\uD558\uB3C4\uB85D \uD588\uC2B5\uB2C8\uB2E4.\n-
-    \uD1A0\uD070\uC740 Unity asset, EditorPrefs, package file\uC5D0 \uC800\uC7A5\uD558\uC9C0
-    \uC54A\uACE0 GitHub CLI, macOS keychain, Git credential helper, SSH key \uC124\uC815\uC5D0
-    \uC704\uC784\uD569\uB2C8\uB2E4."
+  _releaseNote: "- Unity \uC0C1\uB2E8 \uBA54\uB274\uB97C `Tools/Package/GitHub Auth/...`
+    \uAD6C\uC870\uB85C \uC815\uB9AC\uD588\uC2B5\uB2C8\uB2E4.\n- \uD558\uB2E8 \uAD6C\uBD84\uC120
+    \uC601\uC5ED\uC5D0 `README` \uBA54\uB274\uB97C \uCD94\uAC00\uD574 \uD328\uD0A4\uC9C0
+    README\uC5D0 \uBC14\uB85C \uC811\uADFC\uD560 \uC218 \uC788\uAC8C \uD588\uC2B5\uB2C8\uB2E4."
   _dependenciesOverride: 
