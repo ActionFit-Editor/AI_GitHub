@@ -7,8 +7,8 @@ ActionFit Unity editor automation packages에서 공통으로 사용하는 GitHu
 ## 제공 기능
 
 - `GitHubAuthPreflight.CheckProjectGitHubPushAccess(projectRoot)`: 프로젝트 루트에서 `origin` remote, GitHub read access, current branch push dry-run을 확인합니다.
-- `GitHubAuthPreflight.EnsureProjectGitHubPushAccess(projectRoot, contextName)`: 인증 확인에 성공하면 `true`를 반환하고, 실패하면 GitHub 인증 안내 팝업을 띄운 뒤 `false`를 반환합니다.
-- `GitHubAuthPreflight.ShowRequiredDialog(result, contextName)`: 인증 실패 시 Unity 팝업으로 README/AI 문의 안내, 기본 명령 시퀀스, `연결 시도` 버튼을 보여줍니다.
+- `GitHubAuthPreflight.EnsureProjectGitHubPushAccess(projectRoot, contextName)`: 확인에 성공하면 `true`를 반환합니다. 인증/권한 실패에는 GitHub 인증 안내 팝업을, non-fast-forward 실패에는 로컬 브랜치 동기화 팝업을 띄운 뒤 `false`를 반환합니다.
+- `GitHubAuthPreflight.ShowRequiredDialog(result, contextName)`: 인증 실패에는 README/AI 문의와 `연결 시도` 버튼을 표시하고, 로컬 브랜치가 뒤처진 경우에는 `git pull --ff-only` 안내를 별도로 표시합니다.
 - `GitHubAuthPreflight.OpenProjectGitHubSetupTerminal(projectRoot)`: macOS Terminal을 열고 현재 프로젝트 루트에서 GitHub 연결 확인/설정 스크립트를 실행합니다. Terminal 자동 실행에 실패하면 스크립트를 클립보드에 복사합니다.
 - `Tools > Package > GitHub Auth > Check Project GitHub Access`: 현재 Unity 프로젝트의 GitHub 연결을 수동으로 점검합니다.
 - `Tools > Package > GitHub Auth > Open Setup Terminal`: 현재 Unity 프로젝트 루트에서 GitHub 연결 시도 Terminal을 바로 엽니다.
@@ -62,10 +62,13 @@ GIT_TERMINAL_PROMPT=0 git push --dry-run
 - `The current branch ... has no upstream branch`
   - BuildCommit은 로컬 `git push`를 사용하므로 현재 브랜치 upstream이 필요합니다.
   - 일반적으로 `git push -u origin <branch>`로 upstream을 먼저 설정합니다.
+- `non-fast-forward`, `fetch first`, 또는 `tip of your current branch is behind its remote counterpart`
+  - GitHub 연결은 성공했지만 현재 로컬 브랜치가 원격 브랜치보다 뒤처진 상태입니다. 인증 오류가 아닙니다.
+  - `git status --short --branch`로 로컬 변경을 확인한 뒤 `git pull --ff-only`로 원격 변경을 통합하고 BuildCommit을 다시 실행합니다.
 
 ## BuildAutomation 연동
 
-`com.actionfit.buildautomation`은 `Commit, Tag & Push` 실행 전에 이 패키지의 preflight를 호출합니다. 인증이 실패하면 커밋과 태그를 만들기 전에 중단하고, Unity 팝업에 GitHub 인증 필요 문구와 README/AI 문의 안내를 표시합니다.
+`com.actionfit.buildautomation`은 `Commit, Tag & Push` 실행 전에 이 패키지의 preflight를 호출합니다. 인증 또는 브랜치 동기화 확인이 실패하면 커밋과 태그를 만들기 전에 중단합니다. 인증 실패에는 GitHub 인증 필요 팝업을, 로컬 브랜치가 뒤처진 경우에는 로컬 브랜치 동기화 필요 팝업을 표시합니다.
 
 팝업이 표시되면 `연결 시도` 버튼을 누르거나, 이 README의 로컬 GitHub 연결 확인 절차를 따르거나, AI에게 "BuildCommit GitHub 인증 가이드 알려줘"라고 문의하면 됩니다.
 

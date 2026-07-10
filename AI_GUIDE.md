@@ -7,7 +7,7 @@ This file is shipped inside the UPM package so an AI assistant in a consuming Un
 - Package ID: `com.actionfit.githubauth`
 - Display name: GitHub Auth
 - Repository: `https://github.com/ActionFit-Editor/GitHub_Auth.git`
-- Current package version at generation time: `1.0.3`
+- Current package version at generation time: `1.0.4`
 - Unity version: `6000.2`
 
 ## Purpose
@@ -45,7 +45,7 @@ Requested router entry:
 
 - Menus: `Tools/Package/GitHub Auth/Check Project GitHub Access` and `Tools/Package/GitHub Auth/Open Setup Terminal`.
 - Main API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.CheckProjectGitHubPushAccess(string projectRoot)`.
-- Reusable guard API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.EnsureProjectGitHubPushAccess(string projectRoot, string contextName)` returns `true` when local GitHub read/push checks pass. On failure it shows the shared GitHub authentication dialog and returns `false`.
+- Reusable guard API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.EnsureProjectGitHubPushAccess(string projectRoot, string contextName)` returns `true` when local GitHub read/push checks pass. Authentication and permission failures show the shared GitHub authentication dialog, while a non-fast-forward push rejection shows a separate local-branch synchronization dialog. Both failures return `false`.
 - Dialog API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.ShowRequiredDialog(GitHubAuthCheckResult result, string contextName)` and the overload with `projectRoot`. The failure dialog includes a `연결 시도` button that opens the setup terminal.
 - Setup Terminal API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.OpenProjectGitHubSetupTerminal(string projectRoot)` writes a temporary macOS `.command` script and opens it in Terminal. Non-macOS or launch failures copy the script to the clipboard instead.
 - The push preflight uses `GIT_TERMINAL_PROMPT=0` so Unity does not hang waiting for terminal credential prompts.
@@ -56,6 +56,7 @@ Requested router entry:
   4. `git push --dry-run`
 - If HTTPS auth fails with `could not read Username`, guide the user to run `gh auth login --hostname github.com --git-protocol https --scopes repo,workflow`, then `gh auth setup-git --hostname github.com`, then retry `GIT_TERMINAL_PROMPT=0 git push --dry-run`.
 - If SSH auth fails with `Permission denied (publickey)`, guide the user to verify `ssh -T git@github.com` and register a public key with GitHub.
+- If push dry-run fails with `non-fast-forward`, `fetch first`, or the local-tip-behind message, classify it as `GitHubAuthCheckFailureKind.BranchOutOfDate`. Do not present it as an authentication failure; guide the user to inspect local changes and run `git pull --ff-only`.
 - Build Automation depends on this package and uses it before BuildCommit creates the request commit/tag.
 
 ## Package Tools Menu

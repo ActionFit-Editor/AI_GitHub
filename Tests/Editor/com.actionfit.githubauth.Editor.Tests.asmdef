@@ -1,0 +1,23 @@
+{
+    "name": "com.actionfit.githubauth.Editor.Tests",
+    "rootNamespace": "ActionFit.GitHubAuth.Editor.Tests",
+    "references": [
+        "com.actionfit.githubauth.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false,
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}

@@ -10,6 +10,13 @@ using Debug = UnityEngine.Debug;
 
 namespace ActionFit.GitHubAuth.Editor
 {
+    public enum GitHubAuthCheckFailureKind
+    {
+        None,
+        General,
+        BranchOutOfDate
+    }
+
     public sealed class GitHubAuthCheckResult
     {
         public bool Success { get; private set; }
@@ -17,6 +24,7 @@ namespace ActionFit.GitHubAuth.Editor
         public string Details { get; private set; }
         public string RemoteUrl { get; private set; }
         public string FailedCommand { get; private set; }
+        public GitHubAuthCheckFailureKind FailureKind { get; private set; }
 
         public static GitHubAuthCheckResult Ok(string message, string remoteUrl)
         {
@@ -26,11 +34,17 @@ namespace ActionFit.GitHubAuth.Editor
                 Message = message,
                 RemoteUrl = remoteUrl ?? "",
                 Details = "",
-                FailedCommand = ""
+                FailedCommand = "",
+                FailureKind = GitHubAuthCheckFailureKind.None
             };
         }
 
-        public static GitHubAuthCheckResult Fail(string message, string details, string remoteUrl = "", string failedCommand = "")
+        public static GitHubAuthCheckResult Fail(
+            string message,
+            string details,
+            string remoteUrl = "",
+            string failedCommand = "",
+            GitHubAuthCheckFailureKind failureKind = GitHubAuthCheckFailureKind.General)
         {
             return new GitHubAuthCheckResult
             {
@@ -38,7 +52,8 @@ namespace ActionFit.GitHubAuth.Editor
                 Message = message ?? "GitHub authentication check failed.",
                 Details = details ?? "",
                 RemoteUrl = remoteUrl ?? "",
-                FailedCommand = failedCommand ?? ""
+                FailedCommand = failedCommand ?? "",
+                FailureKind = failureKind
             };
         }
     }
@@ -95,11 +110,17 @@ namespace ActionFit.GitHubAuth.Editor
             GitCommandResult pushCheck = RunGit(projectRoot, "push --dry-run");
             if (!pushCheck.Success)
             {
+                GitHubAuthCheckFailureKind failureKind = ClassifyPushFailure(pushCheck.CombinedOutput);
+                string message = failureKind == GitHubAuthCheckFailureKind.BranchOutOfDate
+                    ? "Current branch is behind its remote counterpart."
+                    : "GitHub push access is not available from this machine.";
+
                 return GitHubAuthCheckResult.Fail(
-                    "GitHub push access is not available from this machine.",
+                    message,
                     pushCheck.CombinedOutput,
                     remoteUrl,
-                    "git push --dry-run");
+                    "git push --dry-run",
+                    failureKind);
             }
 
             return GitHubAuthCheckResult.Ok("GitHub read and push dry-run checks passed.", remoteUrl);
@@ -130,6 +151,12 @@ namespace ActionFit.GitHubAuth.Editor
 
         public static void ShowRequiredDialog(GitHubAuthCheckResult result, string contextName, string projectRoot)
         {
+            if (result?.FailureKind == GitHubAuthCheckFailureKind.BranchOutOfDate)
+            {
+                ShowBranchSyncRequiredDialog(result, contextName);
+                return;
+            }
+
             string title = "GitHub 인증 필요";
             string context = string.IsNullOrWhiteSpace(contextName) ? "이 작업" : contextName;
             string failedCommand = string.IsNullOrEmpty(result?.FailedCommand)
@@ -162,6 +189,23 @@ namespace ActionFit.GitHubAuth.Editor
             {
                 OpenReadme();
             }
+        }
+
+        private static void ShowBranchSyncRequiredDialog(GitHubAuthCheckResult result, string contextName)
+        {
+            string context = string.IsNullOrWhiteSpace(contextName) ? "이 작업" : contextName;
+            string details = Shorten(result?.Details ?? "", DialogDetailLimit);
+            string message =
+                $"GitHub 연결은 확인됐지만 현재 로컬 브랜치가 원격 브랜치보다 뒤처져 있어 {context}을 실행할 수 없습니다.\n\n" +
+                "현재 변경사항을 확인한 뒤 원격 변경을 통합하고 다시 시도하세요.\n\n" +
+                "git status --short --branch\n" +
+                "git pull --ff-only\n\n" +
+                "`git pull --ff-only`가 거부되면 미커밋 변경 또는 브랜치 분기 상태를 먼저 정리해야 합니다.";
+
+            if (!string.IsNullOrEmpty(details))
+                message += $"\n\n오류 내용:\n{details}";
+
+            EditorUtility.DisplayDialog("로컬 브랜치 동기화 필요", message, "확인");
         }
 
         public static bool OpenProjectGitHubSetupTerminal(string projectRoot)
@@ -260,11 +304,15 @@ namespace ActionFit.GitHubAuth.Editor
             builder.AppendLine("read_status=$?");
             builder.AppendLine("echo");
             builder.AppendLine("echo \"[5/5] Check current branch push access with dry-run\"");
-            builder.AppendLine("GIT_TERMINAL_PROMPT=0 git push --dry-run");
+            builder.AppendLine("push_output=\"$(LC_ALL=C GIT_TERMINAL_PROMPT=0 git push --dry-run 2>&1)\"");
             builder.AppendLine("push_status=$?");
+            builder.AppendLine("printf '%s\\n' \"$push_output\"");
             builder.AppendLine("echo");
             builder.AppendLine("if [[ $read_status -eq 0 && $push_status -eq 0 ]]; then");
             builder.AppendLine("  echo \"GitHub read and push dry-run checks passed.\"");
+            builder.AppendLine("elif [[ \"$push_output\" == *\"non-fast-forward\"* || \"$push_output\" == *\"fetch first\"* || \"$push_output\" == *\"tip of your current branch is behind\"* ]]; then");
+            builder.AppendLine("  echo \"GitHub connection succeeded, but the current branch is behind its remote counterpart.\"");
+            builder.AppendLine("  echo \"Review local changes, then run: git pull --ff-only\"");
             builder.AppendLine("else");
             builder.AppendLine("  echo \"GitHub checks did not fully pass.\"");
             builder.AppendLine("  echo \"If the current branch has no upstream, run: git push -u origin $(git branch --show-current)\"");
@@ -350,6 +398,24 @@ namespace ActionFit.GitHubAuth.Editor
                    remoteUrl.IndexOf("github.com", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
+        internal static GitHubAuthCheckFailureKind ClassifyPushFailure(string output)
+        {
+            if (ContainsIgnoreCase(output, "non-fast-forward") ||
+                ContainsIgnoreCase(output, "fetch first") ||
+                ContainsIgnoreCase(output, "tip of your current branch is behind"))
+            {
+                return GitHubAuthCheckFailureKind.BranchOutOfDate;
+            }
+
+            return GitHubAuthCheckFailureKind.General;
+        }
+
+        private static bool ContainsIgnoreCase(string value, string expected)
+        {
+            return !string.IsNullOrEmpty(value) &&
+                   value.IndexOf(expected, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
         private static GitCommandResult RunGit(string workingDirectory, string arguments)
         {
             try
@@ -365,6 +431,7 @@ namespace ActionFit.GitHubAuth.Editor
                     CreateNoWindow = true
                 };
                 startInfo.EnvironmentVariables["GIT_TERMINAL_PROMPT"] = "0";
+                startInfo.EnvironmentVariables["LC_ALL"] = "C";
 
                 using (Process process = Process.Start(startInfo))
                 {
