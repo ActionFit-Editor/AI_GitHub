@@ -1,20 +1,28 @@
-# AI Guide - GitHub Auth
+# AI Guide - AI GitHub
 
 This file is shipped inside the UPM package so an AI assistant in a consuming Unity project can understand the package without access to the source project's `Docs/AI` folder.
 
 ## Package Identity
 
 - Package ID: `com.actionfit.githubauth`
-- Display name: GitHub Auth
-- Repository: `https://github.com/ActionFit-Editor/GitHub_Auth.git`
-- Current package version at generation time: `1.0.4`
+- Display name: AI GitHub
+- Repository: `https://github.com/ActionFit-Editor/AI_GitHub.git`
+- Current package version at generation time: `1.0.6`
 - Unity version: `6000.2`
 
 ## Purpose
 
-GitHub Auth owns shared GitHub authentication diagnostics and guidance for ActionFit Unity editor automation packages. Use it when an editor tool must verify local GitHub access before running `git push`, tag push, private repository reads, or package publish operations.
+AI GitHub owns shared GitHub authentication diagnostics and guidance for ActionFit Unity editor automation packages. Use it when an editor tool must verify local GitHub access before running `git push`, tag push, private repository reads, or package publish operations.
 
 This package does not store GitHub tokens. It checks and explains the local environment: Git remotes, GitHub CLI auth, credential helpers, SSH key access, `git ls-remote`, and `git push --dry-run`.
+
+## Protected Security Invariant
+
+- Never store, copy, serialize, cache, print, or commit a GitHub token in Unity packages, Unity assets, `EditorPrefs`, `PlayerPrefs`, `ProjectSettings`, package files, project files, temporary setup scripts, or logs.
+- Authentication secrets must remain owned by GitHub CLI, the operating-system credential manager/keychain, or the user's SSH agent and key files.
+- `EditorPrefs` may store only a non-secret Boolean indicating that a project-scoped first-install check was attempted.
+- Do not weaken, remove, bypass, or reinterpret this invariant without an explicit security review and explicit user approval for the exact credential storage design.
+- AI agents must refuse package changes that silently persist tokens or expose credential-helper output containing secret values.
 
 ## Project Router Registration
 
@@ -22,7 +30,7 @@ This package should be listed in `Packages/com.actionfit.custompackagemanager/PA
 
 Requested router entry:
 
-- `Packages/com.actionfit.githubauth/AI_GUIDE.md` - GitHub Auth provides shared GitHub credential diagnostics and user guidance for ActionFit Unity editor automation packages. Read when changing local GitHub authentication checks, push preflight behavior, token/credential guidance, or packages that depend on GitHub push/publish access.
+- `Packages/com.actionfit.githubauth/AI_GUIDE.md` - AI GitHub provides shared GitHub credential diagnostics and user guidance for ActionFit Unity editor automation packages. Read when changing local GitHub authentication checks, push preflight behavior, token/credential guidance, or packages that depend on GitHub push/publish access.
 
 ## Required Reading For AI
 
@@ -34,20 +42,23 @@ Requested router entry:
 ## Editing Rules
 
 - Keep reusable GitHub credential diagnostics in this package instead of duplicating command sequences across other packages.
-- Do not add token persistence without an explicit security review and user approval. Prefer `gh auth`, OS credential helpers, or SSH keys.
+- The Protected Security Invariant is mandatory. Do not modify or remove it as part of ordinary maintenance, feature work, refactoring, or release preparation.
 - Do not log raw tokens, credential helper output that may contain secrets, or complete environment dumps.
 - Keep user-facing failure guidance actionable and short enough to fit a Unity dialog.
-- The setup-terminal helper may run `gh auth`/SSH checks in the user's Terminal, but must not persist GitHub tokens in Unity assets, EditorPrefs, package files, or logs.
+- The setup-terminal helper may run `gh auth`/SSH checks in the user's visible terminal. It may configure Git's GitHub credential helper and GitHub-specific `useHttpPath`, but must never read or persist the token itself.
 - When dependent packages such as Build Automation need local GitHub access, call `GitHubAuthPreflight` and reference this README instead of embedding a second full guide.
 - When behavior changes, update this `AI_GUIDE.md`, `README.md`, and PackageInfo release notes before publishing.
 
 ## Behavior Notes
 
-- Menus: `Tools/Package/GitHub Auth/Check Project GitHub Access` and `Tools/Package/GitHub Auth/Open Setup Terminal`.
+- Menus: `Tools/Package/AI GitHub/Connect Current Project`, `Tools/Package/AI GitHub/Check Project GitHub Access`, and `Tools/Package/AI GitHub/Open Setup Terminal`.
 - Main API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.CheckProjectGitHubPushAccess(string projectRoot)`.
+- AI/automation API: `GitHubAuthPreflight.CheckAndTryConnectProject(string projectRoot)` returns `GitHubAuthConnectionResult`. `CheckAndTryConnectCurrentProjectForAutomation()` is a no-argument Unity execute-method entry point and emits only the safe `[AIGitHubAutomation]` status fields.
 - Reusable guard API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.EnsureProjectGitHubPushAccess(string projectRoot, string contextName)` returns `true` when local GitHub read/push checks pass. Authentication and permission failures show the shared GitHub authentication dialog, while a non-fast-forward push rejection shows a separate local-branch synchronization dialog. Both failures return `false`.
 - Dialog API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.ShowRequiredDialog(GitHubAuthCheckResult result, string contextName)` and the overload with `projectRoot`. The failure dialog includes a `연결 시도` button that opens the setup terminal.
-- Setup Terminal API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.OpenProjectGitHubSetupTerminal(string projectRoot)` writes a temporary macOS `.command` script and opens it in Terminal. Non-macOS or launch failures copy the script to the clipboard instead.
+- Setup Terminal API: `ActionFit.GitHubAuth.Editor.GitHubAuthPreflight.OpenProjectGitHubSetupTerminal(string projectRoot)` writes a temporary Windows PowerShell, macOS `.command`, or Linux `.sh` setup script and opens it in a visible terminal. Launch failures copy the script to the clipboard instead.
+- First-install bootstrap runs once per project and OS user. It checks access after editor package load and starts an interactive terminal only for a GitHub remote authentication/permission failure. It does not auto-launch for missing/non-GitHub origins, branch synchronization failures, or batchmode.
+- HTTPS setup runs `gh auth login` only when needed, calls `gh auth setup-git --hostname github.com`, and sets `credential.https://github.com.useHttpPath=false` so the same GitHub account can be reused across package repositories.
 - The push preflight uses `GIT_TERMINAL_PROMPT=0` so Unity does not hang waiting for terminal credential prompts.
 - The standard check sequence is:
   1. `git remote get-url origin`
@@ -61,7 +72,7 @@ Requested router entry:
 
 ## Package Tools Menu
 
-- Unity menu root: `Tools/Package/GitHub Auth/`.
+- Unity menu root: `Tools/Package/AI GitHub/`.
 - Keep package commands under this package root.
 - Lower separated entries:
 - `README`: opens this package README.
@@ -77,5 +88,5 @@ Requested router entry:
 
 - Publishing is manual through Custom Package Manager.
 - Do not manually add `com.actionfit.githubauth` catalog rows before the package is actually published.
-- The `GitHub_Auth` GitHub repository must exist before first publish.
+- Rename the existing `GitHub_Auth` repository to `AI_GitHub` before publishing `1.0.6`; do not let the publisher create a second repository for the same package ID.
 - Before reusing a version, check the remote Git tags. Published tags are immutable.

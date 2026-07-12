@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class GitHubAuthPackageMenu
 {
-    private const string MenuRoot = "Tools/Package/GitHub Auth/";
+    private const string MenuRoot = "Tools/Package/AI GitHub/";
     private const string ReadmePath = "Packages/com.actionfit.githubauth/README.md";
     private const int ReadmePriority = 901;
 
