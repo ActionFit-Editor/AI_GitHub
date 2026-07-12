@@ -20,5 +20,13 @@ MonoBehaviour:
   _status: verified
   _description: Shared GitHub authentication diagnostics and guidance for ActionFit
     Unity editor automation packages.
-  _releaseNote: "- Windows PowerShell, macOS Terminal, Linux terminal에서 실행되는 OS별 GitHub 연결 절차를 추가해 개발 PC마다 최초 인증을 안내할 수 있습니다.\n- 패키지 최초 로드 시 프로젝트별 1회 GitHub read/push dry-run을 확인하고, 인증 실패일 때만 사용자에게 보이는 연결 터미널을 시작합니다.\n- `CheckAndTryConnectProject`와 `CheckAndTryConnectCurrentProjectForAutomation` 공개 API를 추가해 AI와 Editor 도구가 같은 연결 흐름을 호출할 수 있습니다.\n- `Tools/Package/AI GitHub/Connect Current Project` 메뉴를 추가해 사용자가 연결 확인과 설정을 수동으로 다시 실행할 수 있습니다.\n- HTTPS 연결 시 `gh auth setup-git`과 GitHub 전용 `useHttpPath=false`를 설정해 여러 ActionFit repository가 같은 OS credential을 재사용합니다.\n- Caution: GitHub token은 Unity package, asset, EditorPrefs, project/package file, 임시 script 또는 log에 저장하지 않으며 이 보안 원칙은 명시적 승인 없이 변경할 수 없습니다."
+  _releaseNote: "- README \uC81C\uBAA9\uC5D0 `com.actionfit.githubauth`\uB97C \uBA85\uC2DC\uD574
+    \uD328\uD0A4\uC9C0 \uACC4\uC57D \uAC80\uC0AC\uC640 \uC0AC\uC6A9\uC790\uC758 \uD328\uD0A4\uC9C0
+    \uC2DD\uBCC4\uC774 \uC77C\uCE58\uD558\uB3C4\uB85D \uC815\uB9AC\uD588\uC2B5\uB2C8\uB2E4.\n-
+    `Packages/manifest.json`\uC5D0 \uC0AC\uC6A9\uD560 `AI_GitHub.git#1.0.7` Git UPM
+    \uC124\uCE58 \uC608\uC2DC\uB97C \uCD94\uAC00\uD588\uC2B5\uB2C8\uB2E4.\n- `package.json`,
+    README, `AI_GUIDE.md`, PackageInfo\uC758 \uB9B4\uB9AC\uC2A4 \uBC84\uC804\uC744
+    1.0.7\uB85C \uD568\uAED8 \uB9DE\uCDC4\uC2B5\uB2C8\uB2E4.\n- GitHub \uC778\uC99D
+    API, \uBA54\uB274, \uB85C\uCEEC credential \uCC98\uB9AC \uBC0F token \uBE44\uC800\uC7A5
+    \uBCF4\uC548 \uC6D0\uCE59\uC740 \uBCC0\uACBD\uD558\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4."
   _dependenciesOverride: 

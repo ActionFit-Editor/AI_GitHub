@@ -1,4 +1,14 @@
-# AI GitHub
+# AI GitHub (com.actionfit.githubauth)
+
+## 설치 (manifest.json, Git URL)
+
+```json
+{
+  "dependencies": {
+    "com.actionfit.githubauth": "https://github.com/ActionFit-Editor/AI_GitHub.git#1.0.7"
+  }
+}
+```
 
 ActionFit Unity editor automation packages에서 공통으로 사용하는 GitHub 인증 진단 패키지입니다. BuildCommit, package publish, private package 접근처럼 로컬 기기에서 `git` 명령을 실행해야 하는 기능이 GitHub 연결 상태를 확인하고 사용자에게 복구 절차를 안내할 때 사용합니다.
 

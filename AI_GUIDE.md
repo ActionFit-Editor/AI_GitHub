@@ -7,7 +7,7 @@ This file is shipped inside the UPM package so an AI assistant in a consuming Un
 - Package ID: `com.actionfit.githubauth`
 - Display name: AI GitHub
 - Repository: `https://github.com/ActionFit-Editor/AI_GitHub.git`
-- Current package version at generation time: `1.0.6`
+- Current package version at generation time: `1.0.7`
 - Unity version: `6000.2`
 
 ## Purpose
@@ -88,5 +88,5 @@ Requested router entry:
 
 - Publishing is manual through Custom Package Manager.
 - Do not manually add `com.actionfit.githubauth` catalog rows before the package is actually published.
-- Rename the existing `GitHub_Auth` repository to `AI_GitHub` before publishing `1.0.6`; do not let the publisher create a second repository for the same package ID.
+- Keep using the existing `AI_GitHub` repository; do not let the publisher create a second repository for the same package ID under the legacy `GitHub_Auth` name.
 - Before reusing a version, check the remote Git tags. Published tags are immutable.
