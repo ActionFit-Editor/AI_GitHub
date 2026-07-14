@@ -7,7 +7,7 @@ This file is shipped inside the UPM package so an AI assistant in a consuming Un
 - Package ID: `com.actionfit.githubauth`
 - Display name: AI GitHub
 - Repository: `https://github.com/ActionFit-Editor/AI_GitHub.git`
-- Current package version at generation time: `1.0.7`
+- Current package version at generation time: `1.0.8`
 - Unity version: `6000.2`
 
 ## Purpose
@@ -15,6 +15,12 @@ This file is shipped inside the UPM package so an AI assistant in a consuming Un
 AI GitHub owns shared GitHub authentication diagnostics and guidance for ActionFit Unity editor automation packages. Use it when an editor tool must verify local GitHub access before running `git push`, tag push, private repository reads, or package publish operations.
 
 This package does not store GitHub tokens. It checks and explains the local environment: Git remotes, GitHub CLI auth, credential helpers, SSH key access, `git ls-remote`, and `git push --dry-run`.
+
+## Agent Skills
+
+- `Skills~/manifest.json` registers schema v2 `github-auth-help` and `github-auth-diagnose` for Codex and Claude.
+- Both skills are read-only. Diagnose reports only safe remote/auth/read/push-dry-run classifications and never reproduces raw remote URLs, credential-helper output, tokens, or captured Git error text.
+- The skills do not run login/setup, change Git configuration, open setup terminals, set upstream branches, pull, or perform a real push.
 
 ## Protected Security Invariant
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Auth Help"
+  short_description: "Explain safe GitHub authentication diagnostics"
+  default_prompt: "Use $github-auth-help to explain AI GitHub diagnostics, setup guidance, and credential safety boundaries."

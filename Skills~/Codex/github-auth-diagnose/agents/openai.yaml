@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Auth Diagnose"
+  short_description: "Diagnose GitHub access without exposing secrets"
+  default_prompt: "Use $github-auth-diagnose to classify local GitHub access and branch-state failures without changing configuration or printing credentials."

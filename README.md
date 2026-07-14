@@ -5,7 +5,7 @@
 ```json
 {
   "dependencies": {
-    "com.actionfit.githubauth": "https://github.com/ActionFit-Editor/AI_GitHub.git#1.0.7"
+    "com.actionfit.githubauth": "https://github.com/ActionFit-Editor/AI_GitHub.git#1.0.8"
   }
 }
 ```
@@ -15,6 +15,15 @@ ActionFit Unity editor automation packages에서 공통으로 사용하는 GitHu
 이 패키지는 GitHub token을 저장하지 않습니다. Windows/macOS/Linux OS 사용자 계정의 Git credential helper, GitHub CLI(`gh auth`), SSH key, 또는 이미 설정된 OS credential store/keychain을 확인하고 안내합니다.
 
 > 보안 불변 규칙: GitHub token을 Unity package, Unity asset, `EditorPrefs`, `PlayerPrefs`, `ProjectSettings`, project/package file, 임시 setup script 또는 log에 저장·복사·출력하지 않습니다. 이 규칙은 명시적인 보안 검토와 사용자 승인 없이 수정하거나 제거하면 안 됩니다.
+
+## Agent Skills
+
+Custom Package Manager의 `Install or Refresh Agent Skills`는 Codex와 Claude에 다음 read-only skill을 설치합니다.
+
+- `github-auth-help`: 로컬 인증 소유권, 실패 분류, Unity 메뉴와 token 비노출 경계를 설명합니다.
+- `github-auth-diagnose`: remote 종류, `gh` 인증 상태, remote read, push dry-run과 branch 동기화 실패를 credential 원문 없이 분류합니다.
+
+진단 skill은 raw remote URL, credential helper 출력과 token을 표시하지 않으며 `gh auth login`, Git config 변경, setup terminal 실행, 실제 push를 수행하지 않습니다.
 
 ## 제공 기능
 

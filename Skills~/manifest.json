@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "skillPrefix": "github-auth",
+  "helpSkill": "github-auth-help",
+  "skills": [
+    {
+      "name": "github-auth-help",
+      "agents": ["codex", "claude"],
+      "includeShared": false,
+      "access": "read-only"
+    },
+    {
+      "name": "github-auth-diagnose",
+      "agents": ["codex", "claude"],
+      "includeShared": false,
+      "access": "read-only"
+    }
+  ]
+}
