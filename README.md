@@ -5,7 +5,7 @@
 ```json
 {
   "dependencies": {
-    "com.actionfit.githubauth": "https://github.com/ActionFit-Editor/AI_GitHub.git#1.0.8"
+    "com.actionfit.githubauth": "https://github.com/ActionFit-Editor/AI_GitHub.git#1.0.9"
   }
 }
 ```
@@ -16,7 +16,7 @@ ActionFit Unity editor automation packages에서 공통으로 사용하는 GitHu
 
 > 보안 불변 규칙: GitHub token을 Unity package, Unity asset, `EditorPrefs`, `PlayerPrefs`, `ProjectSettings`, project/package file, 임시 setup script 또는 log에 저장·복사·출력하지 않습니다. 이 규칙은 명시적인 보안 검토와 사용자 승인 없이 수정하거나 제거하면 안 됩니다.
 
-## Agent Skills
+## Agent Skill 안내
 
 Custom Package Manager의 `Install or Refresh Agent Skills`는 Codex와 Claude에 다음 read-only skill을 설치합니다.
 
@@ -107,9 +107,9 @@ GIT_TERMINAL_PROMPT=0 git push --dry-run
 
 팝업이 표시되면 `연결 시도` 버튼을 누르거나, 이 README의 로컬 GitHub 연결 확인 절차를 따르거나, AI에게 "BuildCommit GitHub 인증 가이드 알려줘"라고 문의하면 됩니다.
 
-## Unity Menu
+## Unity 메뉴
 
-- Package root: `Tools > Package > AI GitHub`.
-- Connect: `Tools > Package > AI GitHub > Connect Current Project`.
-- README: `Tools > Package > AI GitHub > README`.
-- Package commands stay under the same package root and appear above the separated README/Setting SO entries when those entries exist.
+- 패키지 root: `Tools > Package > AI GitHub`
+- 연결: `Tools > Package > AI GitHub > Connect Current Project`
+- README: `Tools > Package > AI GitHub > README`
+- 패키지 명령은 같은 package root 아래에 유지하며 README/Setting SO 항목이 있으면 분리된 해당 항목보다 위에 표시합니다.

@@ -7,7 +7,7 @@ This file is shipped inside the UPM package so an AI assistant in a consuming Un
 - Package ID: `com.actionfit.githubauth`
 - Display name: AI GitHub
 - Repository: `https://github.com/ActionFit-Editor/AI_GitHub.git`
-- Current package version at generation time: `1.0.8`
+- Current package version at generation time: `1.0.9`
 - Unity version: `6000.2`
 
 ## Purpose
