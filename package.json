@@ -1,6 +1,6 @@
 {
     "name": "com.actionfit.githubauth",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "displayName": "AI GitHub",
     "description": "Shared GitHub authentication diagnostics and guidance for ActionFit Unity editor automation packages.",
     "unity": "6000.2",

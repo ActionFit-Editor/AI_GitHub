@@ -5,7 +5,7 @@
 ```json
 {
   "dependencies": {
-    "com.actionfit.githubauth": "https://github.com/ActionFit-Editor/AI_GitHub.git#1.0.9"
+    "com.actionfit.githubauth": "https://github.com/ActionFit-Editor/AI_GitHub.git#1.0.10"
   }
 }
 ```
@@ -18,12 +18,13 @@ ActionFit Unity editor automation packages에서 공통으로 사용하는 GitHu
 
 ## Agent Skill 안내
 
-Custom Package Manager의 `Install or Refresh Agent Skills`는 Codex와 Claude에 다음 read-only skill을 설치합니다.
+Custom Package Manager의 `Install or Refresh Agent Skills`는 Codex와 Claude에 다음 skill을 설치합니다.
 
 - `github-auth-help`: 로컬 인증 소유권, 실패 분류, Unity 메뉴와 token 비노출 경계를 설명합니다.
+- `github-auth-setup`: 명시 호출 시 안전한 진단과 현재 연결 계획 승인을 거쳐 패키지의 visible setup terminal을 열고 다시 검증합니다.
 - `github-auth-diagnose`: remote 종류, `gh` 인증 상태, remote read, push dry-run과 branch 동기화 실패를 credential 원문 없이 분류합니다.
 
-진단 skill은 raw remote URL, credential helper 출력과 token을 표시하지 않으며 `gh auth login`, Git config 변경, setup terminal 실행, 실제 push를 수행하지 않습니다.
+Setup skill은 암시 호출되지 않으며 로그인 terminal과 GitHub-specific Git config 영향을 먼저 설명하고 별도 승인을 받습니다. Help/diagnose skill은 raw remote URL, credential helper 출력과 token을 표시하지 않으며 `gh auth login`, Git config 변경, setup terminal 실행 또는 실제 push를 수행하지 않습니다. 어떤 skill도 token을 읽거나 프로젝트에 저장하지 않습니다.
 
 ## 제공 기능
 

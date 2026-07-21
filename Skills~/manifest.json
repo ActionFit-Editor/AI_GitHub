@@ -10,6 +10,12 @@
       "access": "read-only"
     },
     {
+      "name": "github-auth-setup",
+      "agents": ["codex", "claude"],
+      "includeShared": false,
+      "access": "write-capable"
+    },
+    {
       "name": "github-auth-diagnose",
       "agents": ["codex", "claude"],
       "includeShared": false,
