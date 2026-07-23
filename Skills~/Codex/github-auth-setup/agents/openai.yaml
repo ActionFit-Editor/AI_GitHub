@@ -3,4 +3,4 @@ interface:
   short_description: "Connect GitHub through a visible secret-safe login flow"
   default_prompt: "Use $github-auth-setup to connect this project to GitHub without exposing credentials."
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

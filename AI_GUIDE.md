@@ -7,7 +7,7 @@ This file is shipped inside the UPM package so an AI assistant in a consuming Un
 - Package ID: `com.actionfit.githubauth`
 - Display name: AI GitHub
 - Repository: `https://github.com/ActionFit-Editor/AI_GitHub.git`
-- Current package version at generation time: `1.0.10`
+- Current package version at generation time: `1.0.11`
 - Unity version: `6000.2`
 
 ## Purpose
@@ -18,9 +18,9 @@ This package does not store GitHub tokens. It checks and explains the local envi
 
 ## Agent Skills
 
-- `Skills~/manifest.json` registers schema v2 `github-auth-help`, explicit write-capable `github-auth-setup`, and read-only `github-auth-diagnose` for Codex and Claude.
+- `Skills~/manifest.json` registers schema v2 `github-auth-help`, write-capable `github-auth-setup`, and read-only `github-auth-diagnose` for Codex and Claude. The Codex setup source is available in the default context.
 - Help and diagnose are read-only. Diagnose reports only safe remote/auth/read/push-dry-run classifications and never reproduces raw remote URLs, credential-helper output, tokens, or captured Git error text.
-- Setup is manual-only. It diagnoses first, shows the exact GitHub CLI, credential-helper, GitHub-specific global Git config, browser/2FA/SSO, or SSH effects, obtains approval, invokes only the package-owned visible terminal flow, and re-runs the safe diagnosis.
+- Setup is available in the default Codex context, but context availability is not connection approval. It diagnoses first, shows the exact GitHub CLI, credential-helper, GitHub-specific global Git config, browser/2FA/SSO, or SSH effects, obtains approval, invokes only the package-owned visible terminal flow, and re-runs the safe diagnosis.
 - No skill adds or changes remotes, sets upstream branches, pulls, performs a real push, installs `gh`, grants repository/organization access, or reads/stores authentication secrets.
 
 ## Protected Security Invariant
